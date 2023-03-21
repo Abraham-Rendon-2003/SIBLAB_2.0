@@ -18,7 +18,7 @@ export default function SesionScreen(){
         }
 
         try{
-            const res = await fetch('http://192.168.67.17:8080/api-siblab/login/', req)
+            const res = await fetch('http://192.168.70.154:8080/api-siblab/login/', req)
             const data = await res.json()
             console.log(data)
             if(!username || !password){

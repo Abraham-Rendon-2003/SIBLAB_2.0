@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, StyleSheet, Text, Picker } from "react-native";
+import { View, TextInput, Button, StyleSheet, Text,} from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
@@ -35,7 +35,8 @@ export default function RegisterScreen() {
         }}
         validationSchema={SignupSchema}
         onSubmit={(values, { setSubmitting }) => {
-          fetch("http://192.168.34.248:8080/api-siblab/user/", {
+          console.log(values)
+          fetch("http://192.168.70.154:8080/api-siblab/user/", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -108,13 +109,6 @@ export default function RegisterScreen() {
             {errors.email && touched.email && (
               <Text style={styles.error}>{errors.email}</Text>
             )}
-            <Picker
-              group={group}
-              onValueChange={(itemValue, itemIndex) => setGroup(itemValue)}
-              value={values.group}
-            >
-              <Picker.Item label= "test" value="test"/>
-            </Picker>
             <TextInput
               style={styles.input}
               placeholder="Contraseña"
