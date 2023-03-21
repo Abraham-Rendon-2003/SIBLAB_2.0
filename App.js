@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import 'react-native-gesture-handler'
 import { NavigationContainer } from "@react-navigation/native"
 import AppNavigation from "./src/navigation/AppNavigation"
@@ -9,7 +9,7 @@ LogBox.ignoreAllLogs()
 export default function App() {
   return (
     <NavigationContainer>
-    <IndexStack/>
+      <IndexStack/>
   </NavigationContainer>
   )
 }

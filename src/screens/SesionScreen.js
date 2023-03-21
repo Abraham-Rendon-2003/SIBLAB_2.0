@@ -18,7 +18,7 @@ export default function SesionScreen(){
         }
 
         try{
-            const res = await fetch('http://192.168.70.154:8080/api-siblab/login/', req)
+            const res = await fetch('http://192.168.34.248:8080/api-siblab/login/', req)
             const data = await res.json()
             console.log(data)
             if(!username || !password){
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'cyan'
+        backgroundColor: 'black'
     },
     input:{
         width: 300,

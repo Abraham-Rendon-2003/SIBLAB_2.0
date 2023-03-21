@@ -26,7 +26,7 @@ export default function ReportScreen(){
 
     useEffect(() => {
         const selectTeacher = async () => {
-            const response = await axios.get('http://localhost:8080/api-siblab/user/');
+            const response = await axios.get('http://192.168.34.248:8080/api-siblab/user/');
             const docenteFiltro = response.data.data;
             const filterTeacter = docenteFiltro.filter(docente => docente.role === 'Teacher');
             setTeachers(filterTeacter);

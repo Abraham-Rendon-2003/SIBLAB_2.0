@@ -36,7 +36,7 @@ export default function RegisterScreen() {
         validationSchema={SignupSchema}
         onSubmit={(values, { setSubmitting }) => {
           console.log(values)
-          fetch("http://192.168.70.154:8080/api-siblab/user/", {
+          fetch("http://192.168.34.248:8080/api-siblab/user/", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
