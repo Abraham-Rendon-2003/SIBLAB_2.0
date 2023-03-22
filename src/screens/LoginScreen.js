@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function LoginScreen() {
     const navigation = useNavigation()
-    const image = {uri: 'https://p4.wallpaperbetter.com/wallpaper/141/158/403/simple-minimalism-gradient-wallpaper-preview.jpg'};
+    const image = { uri: 'https://p4.wallpaperbetter.com/wallpaper/141/158/403/simple-minimalism-gradient-wallpaper-preview.jpg'};
     const Register = () => {
         navigation.navigate("registerS")
     }
@@ -15,14 +15,14 @@ export default function LoginScreen() {
 
     return (
         <View style={styles.container}>
-            {/* <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-    </ImageBackground> */}
+            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+            </ImageBackground>
 
             {/* <Image
-                source={require("../assets/img/libro.png")}
-                style={styles.imagelogo}
-            />
-            <Image
+             source={require('../assets/img/libro.png')}
+             style={styles.logo}
+          /> */}
+            {/* <Image
                 source={require("../assets/img/FotoPerfil.png")}
                 style={styles.imagePerfil}
             /> */}
@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'black'
         //background:linear-gradient('180deg, #7ebf34,#1a3b6c'),
     },
     text: {
@@ -108,5 +107,5 @@ const styles = StyleSheet.create({
         width: 180,
         height: 180,
         marginBottom: 35,
-  },
+    },
 });

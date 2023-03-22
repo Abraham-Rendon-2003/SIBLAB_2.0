@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, StyleSheet, Text,} from "react-native";
+import { View, TextInput, Button, StyleSheet, Text, ImageBackground } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string().email("Correo inválido").required("Campo obligatorio"),
@@ -17,11 +18,34 @@ const SignupSchema = Yup.object().shape({
 });
 
 export default function RegisterScreen() {
-  const [group, setGroup] = useState(null)
-  const navigation = useNavigation()
+  const [group, setGroup] = useState(null);
+  const navigation = useNavigation();
+  const image = { uri: "https://p4.wallpaperbetter.com/wallpaper/141/158/403/simple-minimalism-gradient-wallpaper-preview.jpg" };
+
+  const onSubmit = async (values, { setSubmitting }) => {
+    try {
+      const response = await axios.post("http://192.168.34.248:8080/api-siblab/user/", values, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      if (response.status === 200) {
+        alert("Cuenta creada exitosamente");
+        navigation.navigate("historial");
+      } else {
+        alert("Error al crear la cuenta");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error al crear la cuenta");
+    }
+    setSubmitting(false);
+  };
 
   return (
     <View style={styles.container}>
+      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+      </ImageBackground>
       <Text style={styles.title}>Registrar Cuenta</Text>
       <Formik
         initialValues={{
@@ -34,30 +58,7 @@ export default function RegisterScreen() {
           classroom: ""
         }}
         validationSchema={SignupSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log(values)
-          fetch("http://192.168.34.248:8080/api-siblab/user/", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-          })
-            .then((response) => {
-              if (response.ok) {
-                alert("Cuenta creada exitosamente");
-                navigation.navigate("historial");
-              } else {
-                alert("Error al crear la cuenta");
-              }
-              setSubmitting(false);
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-              alert("Error al crear la cuenta");
-              setSubmitting(false);
-            });
-        }}
+        onSubmit={onSubmit}
       >
         {({
           handleChange,
@@ -107,7 +108,10 @@ export default function RegisterScreen() {
               value={values.email}
             />
             {errors.email && touched.email && (
-              <Text style={styles.error}>{errors.email}</Text>
+              <Text style={styles.error}>{errors.email}
+
+
+              </Text>
             )}
             <TextInput
               style={styles.input}
@@ -135,6 +139,7 @@ export default function RegisterScreen() {
               title="Registrar"
               onPress={handleSubmit}
               disabled={isSubmitting}
+              buttonStyle={styles.button}
             />
           </View>
         )}
@@ -148,7 +153,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "black",
   },
   title: {
     fontSize: 20,
@@ -157,14 +161,35 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 14,
-    textAlign: "center",
-    top: 20,
+    padding: 10,
+    top: 15,
     marginLeft: -10,
     backgroundColor: "#F5E7E7",
-    marginBottom: 30,
+    marginBottom: 20,
     color: "#000",
+    width: 270,
+    height: 50,
+    borderRadius: 10,
   },
   error: {
     color: "red",
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    marginBottom: 20,
+    position: 'absolute',
+  },
+  button: {
+    width: 100,
+    height: 50,
+    borderRadius: 10,
+    backgroundColor: "#black",
+    color: "#000",
+    fontSize: 14,
+    padding: 10,
+    top: 15,
+    marginLeft: -10,
+    marginBottom: 20,
   },
 });
