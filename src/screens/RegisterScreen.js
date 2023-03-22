@@ -1,151 +1,84 @@
-import React, { useState } from "react";
-import { View, TextInput, Button, StyleSheet, Text, ImageBackground } from "react-native";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
+import React, {useState} from "react"
+import { StyleSheet, View, TextInput, Button } from "react-native"
+import { Formik } from "formik"
+import * as yup from 'yup'
+import axios from 'axios'
 
-const SignupSchema = Yup.object().shape({
-  email: Yup.string().email("Correo inválido").required("Campo obligatorio"),
-  password: Yup.string().required("Campo obligatorio"),
-  confirm: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Las contraseñas no coinciden")
-    .required("Campo obligatorio"),
-  name: Yup.string().required("Campo obligatorio"),
-  surname: Yup.string().required("Campo obligatorio"),
-  code: Yup.string().required("Campo obligatorio"),
-  classroom: Yup.string().required("Campo obligatorio")
-});
+const SignupSchema = yup.object().shape({
+  name: yup.string().required('Campo obligatorio'),
+  surname: yup.string().required('Campo obligatorio'),
+  email: yup.string().email('Correo inválido').required('Campo obligatorio'),
+  code: yup.string().required('Campo obligatorio'),
+  password: yup.string().required('Campo obligatorio'),
+  passwordConfirmation: yup.string().oneOf([yup.ref('password'),null],'Las contraseñas no coinciden').required('Campo obligatorio')
+})
 
-export default function RegisterScreen() {
-  const [group, setGroup] = useState(null);
-  const navigation = useNavigation();
-  const image = { uri: "https://p4.wallpaperbetter.com/wallpaper/141/158/403/simple-minimalism-gradient-wallpaper-preview.jpg" };
-
-  const onSubmit = async (values, { setSubmitting }) => {
-    try {
-      const response = await axios.post("http://192.168.34.248:8080/api-siblab/user/", values, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-      if (response.status === 200) {
-        alert("Cuenta creada exitosamente");
-        navigation.navigate("historial");
-      } else {
-        alert("Error al crear la cuenta");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error al crear la cuenta");
+export default function RegisterScreen(){
+  const handleSignup = async(values) =>{
+    try{
+      console.log(values)
+      const res = await axios.post('http://192.168.69.51:8080/api-siblab/user/',values)
+      console.log(res.data)
+    }catch(err){
+      console.log('Error ->' + err);
     }
-    setSubmitting(false);
-  };
+  }
 
-  return (
-    <View style={styles.container}>
-      <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-      </ImageBackground>
-      <Text style={styles.title}>Registrar Cuenta</Text>
-      <Formik
-        initialValues={{
-          email: "",
-          password: "",
-          name: "",
-          surname: "",
-          role: "alumno",
-          code: "",
-          classroom: ""
-        }}
-        validationSchema={SignupSchema}
-        onSubmit={onSubmit}
-      >
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-          isSubmitting,
-        }) => (
-          <View>
-            <TextInput
-              style={styles.input}
-              placeholder="Nombre(s)"
-              onChangeText={handleChange("name")}
-              onBlur={handleBlur("name")}
-              value={values.name}
-            />
-            {errors.name && touched.name && (
-              <Text style={styles.error}>{errors.name}</Text>
-            )}
-            <TextInput
-              style={styles.input}
-              placeholder="Apellidos"
-              onChangeText={handleChange("surname")}
-              onBlur={handleBlur("surname")}
-              value={values.surname}
-            />
-            {errors.surname && touched.surname && (
-              <Text style={styles.error}>{errors.surname}</Text>
-            )}
-            <TextInput
-              style={styles.input}
-              placeholder="Matrícula"
-              onChangeText={handleChange("code")}
-              onBlur={handleBlur("code")}
-              value={values.code}
-            />
-            {errors.code && touched.code && (
-              <Text style={styles.error}>{errors.code}</Text>
-            )}
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              value={values.email}
-            />
-            {errors.email && touched.email && (
-              <Text style={styles.error}>{errors.email}
-
-
-              </Text>
-            )}
-            <TextInput
-              style={styles.input}
-              placeholder="Contraseña"
-              onChangeText={handleChange("password")}
-              onBlur={handleBlur("password")}
-              value={values.password}
-              secureTextEntry={true}
-            />
-            {errors.password && touched.password && (
-              <Text style={styles.error}>{errors.password}</Text>
-            )}
-            <TextInput
-              style={styles.input}
-              placeholder="Confirmar Contraseña"
-              onChangeText={handleChange("confirm")}
-              onBlur={handleBlur("confirm")}
-              value={values.confirm}
-              secureTextEntry={true}
-            />
-            {errors.confirm && touched.confirm && (
-              <Text style={styles.error}>{errors.confirm}</Text>
-            )}
-            <Button
-              title="Registrar"
-              onPress={handleSubmit}
-              disabled={isSubmitting}
-              buttonStyle={styles.button}
-            />
-          </View>
-        )}
+  return(
+    <View>
+      <Formik initialValues={{name: '',surname:'',email:'',code:'',password:''}} validationSchema={SignupSchema} onSubmit={handleSignup}>
+      {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+        <>
+          <TextInput
+            onChangeText={handleChange('name')}
+            onBlur={handleBlur('name')}
+            value={values.name}
+            placeholder='Nombre(s)'
+          />
+          {errors.name && <Text>{errors.name}</Text>}
+          <TextInput
+            onChangeText={handleChange('surname')}
+            onBlur={handleBlur('surname')}
+            value={values.surname}
+            placeholder='Apellidos'
+          />
+          {errors.surname && <Text>{errors.surname}</Text>}
+          <TextInput
+            onChangeText={handleChange('code')}
+            onBlur={handleBlur('code')}
+            value={values.code}
+            placeholder='Matrícula'
+          />
+          {errors.surname && <Text>{errors.code}</Text>}
+          <TextInput
+            onChangeText={handleChange('email')}
+            onBlur={handleBlur('email')}
+            value={values.email}
+            placeholder='Correo'
+          />
+          {errors.email && <Text>{errors.email}</Text>}
+          <TextInput
+            onChangeText={handleChange('password')}
+            onBlur={handleBlur('password')}
+            value={values.password}
+            placeholder='Contraseña'
+            secureTextEntry={true}
+          />
+          {errors.password && <Text>{errors.password}</Text>}
+          <TextInput
+            onChangeText={handleChange('passwordConfirmation')}
+            onBlur={handleBlur('passwordConfirmation')}
+            value={values.passwordConfirmation}
+            placeholder='Confirmar contraseña'
+            secureTextEntry={true}
+          />
+          {errors.passwordConfirmation && <Text>{errors.passwordConfirmation}</Text>}
+          <Button onPress={handleSubmit} title='Registrarse'/>
+        </>
+      )}
       </Formik>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
