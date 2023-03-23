@@ -34,7 +34,7 @@ export default function RegisterScreen() {
     initialValues: {
       email: "",
       password: "",
-      confirm:"",
+      confirm: "",
       name: "",
       surname: "",
       code: "",
@@ -42,7 +42,6 @@ export default function RegisterScreen() {
     validationSchema: SignupSchema,
     validateOnChange: false,
     onSubmit: (formValue) => {
-      console.log("Hola");
       console.log(formValue)
       onSubmite(formValue);
     }
@@ -51,14 +50,22 @@ export default function RegisterScreen() {
   const onSubmite = async (values) => {
     try {
       const response = await axios.post(
-        "http://192.168.67.17:8080/api-siblab/user/",
-        values,
+        "http://192.168.0.102:8080/api-siblab/user/",
+        {
+          email: values.email,
+          password: values.password,
+          name: values.name,
+          surname: values.surname,
+          code: values.code,
+          role: "alumno",
+        },
         {
           headers: {
             "Content-Type": "application/json",
           },
         }
       );
+      
       if (response.status === 200) {
         alert("Cuenta creada exitosamente");
         navigation.navigate("historial");
@@ -68,22 +75,29 @@ export default function RegisterScreen() {
     } catch (error) {
       console.error("Error:", error);
       alert("Error al crear la cuenta");
+  
+      if (error.response && error.response.data) {
+        console.log("Error en los datos:", error.response.data);
+      }
     }
   };
+  
+  
+  
 
   return (
     <ScrollView>
-    <View style={styles.container}>
-      <ImageBackground
-        source={image}
-        resizeMode="cover"
-        style={styles.image}
-      ></ImageBackground>
-      <Text style={styles.title}>Registrar Cuenta</Text>
+      <View style={styles.container}>
+        <ImageBackground
+          source={image}
+          resizeMode="cover"
+          style={styles.image}
+        ></ImageBackground>
+        <Text style={styles.title}>Registrar Cuenta</Text>
         <Input
           containerStyle={styles.input}
           placeholder="Nombre(s)"
-          onChangeText={(text) => formik.setFieldValue("name",text)}
+          onChangeText={(text) => formik.setFieldValue("name", text)}
           errorMessage={formik.errors.name}
         />
         <Input
@@ -124,7 +138,7 @@ export default function RegisterScreen() {
           loading={formik.isSubmitting}
           buttonStyle={styles.button}
         />
-    </View>
+      </View>
     </ScrollView>
   );
 }
@@ -134,6 +148,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    
   },
   title: {
     fontSize: 20,
