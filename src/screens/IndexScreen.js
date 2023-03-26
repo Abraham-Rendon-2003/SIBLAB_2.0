@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View} from "react-native";
+import { StyleSheet, Text, View, ImageBackground} from "react-native";
 import { Icon } from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -9,6 +9,7 @@ export default function IndexScreen() {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <ImageBackground source={require('../assets/img/fondo.png')} resizeMode="cover" style={styles.image}></ImageBackground>
         <Text style={styles.title}>Historial</Text>
 
       <View style={styles.content}>
@@ -221,5 +222,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     color: '#fff',
     top: 70
-  }
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    marginBottom: 20,
+    position: 'absolute',
+},
 })

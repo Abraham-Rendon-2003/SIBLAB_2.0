@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   ImageBackground,
-  ScrollView
+  ScrollView,
+  TextInput
 } from "react-native";
 import { Input, Button } from "react-native-elements";
 import { useFormik } from "formik";
@@ -26,6 +27,8 @@ const SignupSchema = Yup.object({
 export default function RegisterScreen() {
   const [group, setGroup] = useState(null);
   const navigation = useNavigation();
+  const [pass, setPass] = useState(false);
+  const [confirm, setConfirm] = useState(false);
   const image = {
     uri: "https://p4.wallpaperbetter.com/wallpaper/141/158/403/simple-minimalism-gradient-wallpaper-preview.jpg",
   };
@@ -46,11 +49,17 @@ export default function RegisterScreen() {
       onSubmite(formValue);
     }
   });
+  const showPass = () => {
+    setPass(!pass);
+  };
 
+  const showConfirm = () => {
+    setConfirm(!confirm);
+  };
   const onSubmite = async (values) => {
     try {
       const response = await axios.post(
-        "http://192.168.0.102:8080/api-siblab/user/",
+        "http://192.168.0.103:8080/api-siblab/login/",
         {
           email: values.email,
           password: values.password,
@@ -58,6 +67,7 @@ export default function RegisterScreen() {
           surname: values.surname,
           code: values.code,
           role: "alumno",
+          Withcredentials:true,
         },
         {
           headers: {
@@ -66,7 +76,7 @@ export default function RegisterScreen() {
         }
       );
       
-      if (response.status === 200) {
+      if (response.status === 201) {
         alert("Cuenta creada exitosamente");
         navigation.navigate("historial");
       } else {
@@ -81,79 +91,85 @@ export default function RegisterScreen() {
       }
     }
   };
-  
-  
-  
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <ImageBackground
-          source={image}
-          resizeMode="cover"
-          style={styles.image}
-        ></ImageBackground>
-        <Text style={styles.title}>Registrar Cuenta</Text>
-        <Input
-          containerStyle={styles.input}
-          placeholder="Nombre(s)"
-          onChangeText={(text) => formik.setFieldValue("name", text)}
-          errorMessage={formik.errors.name}
-        />
-        <Input
-          containerStyle={styles.input}
-          placeholder="Apellidos"
-          onChangeText={(text) => formik.setFieldValue("surname", text)}
-          errorMessage={formik.errors.surname}
-        />
-        <Input
-          containerStyle={styles.input}
-          placeholder="Matrícula"
-          onChangeText={(text) => formik.setFieldValue("code", text)}
-          errorMessage={formik.errors.code}
-        />
-        <Input
-          containerStyle={styles.input}
-          placeholder="Email"
-          onChangeText={(text) => formik.setFieldValue("email", text)}
-          errorMessage={formik.errors.email}
-        />
-        <Input
-          containerStyle={styles.input}
-          placeholder="Contraseña"
-          onChangeText={(text) => formik.setFieldValue("password", text)}
-          errorMessage={formik.errors.password}
-          secureTextEntry={true}
-        />
-        <Input
-          containerStyle={styles.input}
-          placeholder="Confirmar Contraseña"
-          onChangeText={(text) => formik.setFieldValue("confirm", text)}
-          errorMessage={formik.errors.confirm}
-          secureTextEntry={true}
-        />
-        <Button
-          title="Registrar"
-          onPress={formik.handleSubmit}
-          loading={formik.isSubmitting}
-          buttonStyle={styles.button}
-        />
-      </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <ImageBackground
+        source={require("../assets/img/fondo.png")}
+        resizeMode="cover"
+        style={styles.image}
+      ></ImageBackground>
+      <Text style={styles.title}>Registrar Cuenta</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Nombre(s)"
+        onChangeText={(text) => formik.setFieldValue("name", text)}
+        errorMessage={formik.errors.name}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Apellidos"
+        onChangeText={(text) => formik.setFieldValue("surname", text)}
+        errorMessage={formik.errors.surname}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Matrícula"
+        onChangeText={(text) => formik.setFieldValue("code", text)}
+        errorMessage={formik.errors.code}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        onChangeText={(text) => formik.setFieldValue("email", text)}
+        errorMessage={formik.errors.email}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Contraseña"
+        onChangeText={(text) => formik.setFieldValue("password", text)}
+        errorMessage={formik.errors.password}
+        secureTextEntry={pass ? false : true}
+        rightIcon={{
+          type: "material-community",
+          name: pass ? "eye-off-outline" : "eye-outline",
+          onPress: () => showPass(),
+        }}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Confirmar Contraseña"
+        onChangeText={(text) => formik.setFieldValue("confirm", text)}
+        errorMessage={formik.errors.confirm}
+        secureTextEntry={confirm ? false : true}
+        rightIcon={{
+          type: "material-community",
+          name: confirm ? "eye-off-outline" : "eye-outline",
+          onPress: () => showConfirm(),
+        }}
+      />
+      <Button
+        title="Registrar"
+        onPress={formik.handleSubmit}
+        loading={formik.isSubmitting}
+        buttonStyle={[styles.button]}
+      />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
+    flex: 0,
     alignItems: "center",
-    
+    backgroundColor: "cyan",
+    height: "100%",
   },
   title: {
     fontSize: 20,
     color: "#fff",
     marginBottom: 50,
+    marginTop: 50,
   },
   input: {
     fontSize: 14,
@@ -177,15 +193,16 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   button: {
-    width: 100,
-    height: 50,
-    borderRadius: 10,
-    backgroundColor: "black",
-    color: "#000",
-    fontSize: 14,
-    padding: 10,
-    top: 15,
-    marginLeft: -10,
-    marginBottom: 20,
+    justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+        borderRadius: 8,
+        height: 56,
+        marginTop: 20,
+        top: 30,
+        width: 233,
+        borderWidth: 2,
+        borderColor: '#fff',
+        color: '#fff',
   },
 });

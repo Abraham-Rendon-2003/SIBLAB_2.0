@@ -10,6 +10,6 @@ export default function HIstoryStack() {
 <Stack.Navigator nitialRouteName="index" screenOptions={({route}) => ({
         headerShown: false,
     })}>
-        <Stack.Screen name="historyS" component={IndexScreen} options={{title:'personal info'}}/>
+        <Stack.Screen name="historyS" component={IndexScreen} options={{title:'historyS'}}/>
     </Stack.Navigator>  )
 }

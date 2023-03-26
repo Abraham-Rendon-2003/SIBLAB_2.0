@@ -26,7 +26,10 @@ export default function ReportScreen(){
 
     useEffect(() => {
         const selectTeacher = async () => {
-            const response = await axios.get('http://192.168.34.248:8080/api-siblab/user/');
+            const response = await axios.get('http://192.168.0.103:8080/api-siblab/user/',
+            {
+                Withcredentials:true,     
+            });
             const docenteFiltro = response.data.data;
             const filterTeacter = docenteFiltro.filter(docente => docente.role === 'Teacher');
             setTeachers(filterTeacter);
@@ -96,7 +99,7 @@ export default function ReportScreen(){
             <View style={styles.area}>
                 <View style={styles.button}>
                     <Button
-                        title="Enviar"
+                        title="Agregar Reporte"
                         buttonStyle={{backgroundColor: 'transparent'}}
                         onPress={handleSendReport}
                     />

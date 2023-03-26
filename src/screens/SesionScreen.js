@@ -1,55 +1,56 @@
 import React, { useState } from "react"
-import { View, TextInput, Button, StyleSheet, ImageBackground } from "react-native"
+import { View, TextInput, StyleSheet, ImageBackground } from "react-native"
 import { useNavigation } from "@react-navigation/native"
+import { Image, Button, Text } from "react-native-elements"
+import axios from "axios"
 
 export default function SesionScreen() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const image = { uri: 'https://p4.wallpaperbetter.com/wallpaper/141/158/403/simple-minimalism-gradient-wallpaper-preview.jpg' };
     const navigation = useNavigation()
 
     const handleSubmit = async () => {
-        const formData = new FormData()
-        formData.append('username', username)
-        formData.append('password', password)
-        const req = {
-            method: 'POST',
-            body: formData
-        }
+  const formData = new FormData()
+  formData.append('username', username)
+  formData.append('password', password)
+  const req = {
+    method: 'POST',
+    body: formData,
+    credentials: 'include'
+  }
 
-        try {
-            const res = await fetch('http://192.168.34.248:8080/api-siblab/login/', req)
-            const data = await res.json()
-            console.log(data)
-            if (!username || !password) {
-                alert('Ingrese los datos para iniciar sesión')
-            } else if (data && (data.username === username || data.password === password)) {
-                alert('Bienvenido')
-                navigation.navigate('historial')
-            } else {
-                alert('Usuario no encontrado')
-            }
-        } catch (err) {
-            console.log(err)
-            alert('Error')
-        }
+  try {
+    const res = await fetch('http://192.168.0.103:8080/api-siblab/login/', req)
+    const data = await res.json()
+    console.log(data)
+    if (!username || !password) {
+      alert('Ingrese los datos para iniciar sesión')
+    } else if (data && (data.username === username || data.password === password)) {
+      alert('Bienvenido')
+      navigation.navigate('historial')
+    } else {
+      alert('Usuario no encontrado')
     }
+  } catch (err) {
+    console.log(err)
+    alert('Error')
+  }
+}
 
     return (
         <View style={styles.container}>
-            {/* <Image source={require('../assets/img/libro.png')} style={styles.logo}/>
-            <Image source={require('../assets/img/FotoPerfil.png')} style={styles.profile}/> */}
-            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-            </ImageBackground>
+            <ImageBackground source={require('../assets/img/fondo.png')} resizeMode="cover" style={styles.image}></ImageBackground>
+            <Image source={require('../assets/img/libro.png')} style={styles.logo}/>
+            <Image source={require('../assets/img/FotoPerfil.png')} style={styles.profile}/>
             <TextInput
                 style={styles.input}
-                placeholder="email"
+                placeholder="Email"
                 value={username}
                 onChangeText={(ev) => setUsername(ev)}
             />
             <TextInput
                 style={styles.input}
-                placeholder="password"
+                placeholder="Password"
                 value={password}
                 secureTextEntry={password ? false : true}
                 onChangeText={(ev) => setPassword(ev)}
@@ -60,6 +61,7 @@ export default function SesionScreen() {
                 title="Iniciar Sesion"
                 onPress={handleSubmit}
             />
+            <Text style={styles.text}>SIBLAB</Text>
         </View>
     )
 }
@@ -83,23 +85,15 @@ const styles = StyleSheet.create({
         top: 30,
     },
     profile: {
-        width: 100,
-        height: 100,
+        width: 160,
+        height: 160,
         marginBottom: 35
     },
     logo: {
         width: 120,
-        height: 100,
-        marginBottom: 25
-    },
-    button: {
-        width: 300,
-        height: 50,
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        top: 30
+        height: 120,
+        marginBottom: 20,
+        top: -8,
     },
     image: {
         width: '100%',
@@ -112,12 +106,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'transparent',
         borderRadius: 8,
-        padding: 5,
         height: 56,
         marginTop: 20,
+        top: 30,
         width: 233,
         borderWidth: 2,
         borderColor: '#fff',
         color: '#fff',
     },
+    text: {
+        color: '#fff',
+        fontSize: 20,
+        top: 70,
+    }
 })
